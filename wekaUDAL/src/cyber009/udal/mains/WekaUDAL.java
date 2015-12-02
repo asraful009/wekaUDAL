@@ -28,6 +28,7 @@ public class WekaUDAL {
     public Variable data = null;
     public LinearFunction func = null;
     public Classifier classifier = null;
+    
     public WekaUDAL() {
         
     }
@@ -60,6 +61,12 @@ public class WekaUDAL {
         }
     }
     
+    public double posteriorDistribution(Instance x_fl) {
+        double pDistribution = 0.0D;
+        
+        return pDistribution;
+    }
+    
     public void showPlot(Instances dataSet) {
         PlotData2D p2D = new PlotData2D(dataSet);
         p2D.setPlotName(dataSet.relationName());
@@ -82,8 +89,8 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 10);
-        udal.activeLearning(7);
+        udal.init(2, 17);
+        udal.activeLearning(5);
         udal.classifier = new MultilayerPerceptron();
         ((MultilayerPerceptron)udal.classifier).setTrainingTime(100);
         udal.learnByClassifier();
