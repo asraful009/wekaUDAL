@@ -7,6 +7,7 @@ package cyber009.udal.mains;
 
 import cyber009.udal.functions.LinearFunction;
 import cyber009.udal.libs.Variable;
+import weka.core.Instance;
 
 /**
  *
@@ -21,16 +22,30 @@ public class WekaUDAL {
         
     }
     
-    public void init() {
+    public void init(int nFeature, int nDataset) {
         func = new LinearFunction(System.currentTimeMillis());
-        data = new Variable(5, 100);
+        data = new Variable(nFeature, nDataset);
         func.generateSyntheticDataset(data);
+        func.generateCoefficients(data.numberOfFeature);
     }
+    
+    public void activeLearning(int D) {
+        for(int d=0; d<D; d++) {
+            Instance set = data.unLabelDataSets.get(d);
+            func.syntacticLabelFunction(set);
+            data.labelDataSets.add(set);
+            data.unLabelDataSets.remove(d);
+        }
+    }
+    
     
     
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
-        udal.init();
-        System.out.println(udal.data.allDataSets);
+        udal.init(5, 10);
+        System.out.println(udal.data.unLabelDataSets);
+        udal.activeLearning(3);
+        System.out.println(udal.data.unLabelDataSets);
+        System.out.println(udal.data.labelDataSets);
     }
 }

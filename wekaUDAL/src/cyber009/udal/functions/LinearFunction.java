@@ -23,7 +23,7 @@ public class LinearFunction {
     public double [] coefficients =null;
     
     public LinearFunction(long randSeed) {
-        rand = new Random(randSeed);
+        rand = new Random(randSeed);        
     }
     /**
      * <p>use for generate Synthetic Dataset</p>
@@ -35,9 +35,11 @@ public class LinearFunction {
             atts.add(new Attribute("X"+n));
         }
         List<String> classValus = new ArrayList<>();
-        classValus.add("");
+        classValus.add("1");
+        classValus.add("0");
         atts.add(new Attribute("class", classValus));
-        data.allDataSets = new Instances("Syn Data", (ArrayList<Attribute>) atts, data.numberOfDataset);
+        data.unLabelDataSets = new Instances("Syn Data unlabel data set ", (ArrayList<Attribute>) atts, data.numberOfDataset);
+        data.labelDataSets = new Instances("Syn Data label data set", (ArrayList<Attribute>) atts, data.numberOfDataset);
         Instance set = null;
         for(int d = 0; d<data.numberOfDataset; d++) {
             set = new DenseInstance(data.numberOfFeature+1);
@@ -45,14 +47,27 @@ public class LinearFunction {
                 set.setValue(n, rand.nextGaussian());
             }
             //set.setValue(data.numberOfFeature, ); // class value empty does not set any thing that put ? unlabel data set
-            data.allDataSets.add(set);
+            data.unLabelDataSets.add(set);
         }
+        data.unLabelDataSets.setClassIndex(data.numberOfFeature);
     }
     
     public void generateCoefficients(int numberOfFeature) {
         coefficients = new double[numberOfFeature];
         for(int n=0; n<numberOfFeature; n++) {
             coefficients[n] = rand.nextGaussian();
+        }
+    }
+    
+    public void syntacticLabelFunction(Instance set) {
+        double sum = 0.0D;
+        for(int n=0; n<set.numAttributes()-1; n++) {
+            sum+= set.value(n)*coefficients[n];
+        }
+        if(sum<0.0D) {
+            set.setClassValue("1");
+        } else {
+            set.setClassValue("0");
         }
     }
 }

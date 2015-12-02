@@ -18,8 +18,8 @@ public class Variable {
     
     public int numberOfFeature;
     public int numberOfDataset;
-    public Instances allDataSets = null;
-    public Instances trainingDataSets = null;
+    public Instances unLabelDataSets = null;
+    public Instances labelDataSets = null;
     
     public List<Double> listOfClasses;
 
