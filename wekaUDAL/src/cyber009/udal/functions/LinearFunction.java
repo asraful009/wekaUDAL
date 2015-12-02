@@ -38,8 +38,8 @@ public class LinearFunction {
         classValus.add("1");
         classValus.add("0");
         atts.add(new Attribute("class", classValus));
-        data.unLabelDataSets = new Instances("Syn Data unlabel data set ", (ArrayList<Attribute>) atts, data.numberOfDataset);
-        data.labelDataSets = new Instances("Syn Data label data set", (ArrayList<Attribute>) atts, data.numberOfDataset);
+        data.unLabelDataSets = new Instances("Syn Data unlabel data set:"+data.numberOfDataset, (ArrayList<Attribute>) atts, data.numberOfDataset);
+        data.labelDataSets = new Instances("Syn Data label data set:"+data.numberOfDataset, (ArrayList<Attribute>) atts, data.numberOfDataset);
         Instance set = null;
         for(int d = 0; d<data.numberOfDataset; d++) {
             set = new DenseInstance(data.numberOfFeature+1);
