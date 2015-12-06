@@ -20,11 +20,13 @@ public class StatisticalAnalysis {
     
     Evaluation evaluation = null;
     Classifier classifier = null;
+    Instances trainingDataSet;
     
-    public StatisticalAnalysis(Classifier classifier, Instances tranDataSet) {
+    public StatisticalAnalysis(Classifier classifier, Instances trainingDataSet) {
         try {
+            this.trainingDataSet = trainingDataSet;
             this.classifier = classifier;
-            evaluation = new Evaluation(tranDataSet);
+            evaluation = new Evaluation(trainingDataSet);
         } catch (Exception ex) {
             Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -36,6 +38,7 @@ public class StatisticalAnalysis {
         try {
             double classPradic = evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
             prDistribution = Math.abs(classPradic-classTarget);
+            //System.out.println(trainingDataSet.classAttribute().);
         } catch (Exception ex) {
             Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
         }
