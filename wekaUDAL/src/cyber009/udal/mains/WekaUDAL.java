@@ -6,14 +6,18 @@
 package cyber009.udal.mains;
 
 import cyber009.udal.functions.LinearFunction;
+import cyber009.udal.functions.StatisticalAnalysis;
 import cyber009.udal.libs.Variable;
 import java.awt.BorderLayout;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import weka.classifiers.Classifier;
+import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
+import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.gui.visualize.PlotData2D;
@@ -61,11 +65,24 @@ public class WekaUDAL {
         }
     }
     
-    public double posteriorDistribution(Instance x_fl) {
-        double pDistribution = 0.0D;
-        
-        return pDistribution;
+    
+    public void forwardInstanceSelection() {
+        double pp = 0.0D;
+        Attribute classValus = data.labelDataSets.classAttribute();
+        StatisticalAnalysis sa = new StatisticalAnalysis(classifier, data.labelDataSets);
+        if(classValus.isNominal() == true) {
+            for(Instance unLabelSet: data.unLabelDataSets) {
+                pp = 0.0D;
+                for (int i = 0; i < classValus.numValues(); i++) {
+                    double classTarget = Double.parseDouble(classValus.value(i));
+                    pp += sa.posteriorDistribution(unLabelSet, classTarget);
+                    System.out.println(classTarget+ " "+ pp);
+                }
+                System.out.println(pp);
+            }
+        }
     }
+    
     
     public void showPlot(Instances dataSet) {
         PlotData2D p2D = new PlotData2D(dataSet);
@@ -90,12 +107,14 @@ public class WekaUDAL {
         WekaUDAL udal = new WekaUDAL();
         // initial data
         udal.init(2, 17);
-        udal.activeLearning(5);
+        udal.activeLearning(10);
         udal.classifier = new MultilayerPerceptron();
         ((MultilayerPerceptron)udal.classifier).setTrainingTime(100);
         udal.learnByClassifier();
-        System.out.println(udal.classifier.toString());
-        udal.showPlot(udal.data.labelDataSets);
+        
+        udal.forwardInstanceSelection();
+        //System.out.println(udal.classifier.toString());
+        //udal.showPlot(udal.data.labelDataSets);
         
         
     }
