@@ -18,6 +18,7 @@ import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Attribute;
+import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.gui.visualize.PlotData2D;
@@ -65,20 +66,38 @@ public class WekaUDAL {
         }
     }
     
+//    public void addToMinQueue(int index) {
+//        int j=0;
+//        int temp = -1;
+//        for(j= MINQUEUESIZE-1; j >=0; j--) {
+//            if(MinQueue[j] != -1) {
+//                if(v.X_FL[MinQueue[j]] > v.X_FL[index]) {
+//                    if(j != MINQUEUESIZE -1) {
+//                        MinQueue[j+1] = MinQueue[j];
+//                    }
+//                } else {
+//                    break;
+//                }
+//            }
+//            temp = j;
+//        }
+//        if(temp != -1) {
+//            MinQueue[temp] = index;
+//        }
+//    }
     
     public void forwardInstanceSelection() {
         double pp = 0.0D;
-        Attribute classValus = data.labelDataSets.classAttribute();
+        AttributeStats classStats = data.labelDataSets.attributeStats(data.labelDataSets.classIndex());
         StatisticalAnalysis sa = new StatisticalAnalysis(classifier, data.labelDataSets);
-        if(classValus.isNominal() == true) {
+        if(classStats.nominalCounts != null) {
             for(Instance unLabelSet: data.unLabelDataSets) {
                 pp = 0.0D;
-                for (int i = 0; i < classValus.numValues(); i++) {
-                    double classTarget = Double.parseDouble(classValus.value(i));
+                for (int i = 0; i < classStats.nominalCounts.length; i++) {
+                    double classTarget = new Double(data.labelDataSets.attribute(data.labelDataSets.classIndex()).value(i));
                     pp += sa.posteriorDistribution(unLabelSet, classTarget);
-                    System.out.println(classTarget+ " "+ pp);
                 }
-                System.out.println(pp);
+                System.out.println("data:"+unLabelSet+" pp:"+ pp);
             }
         }
     }
@@ -106,8 +125,8 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 17);
-        udal.activeLearning(10);
+        udal.init(2, 1700);
+        udal.activeLearning(130);
         udal.classifier = new MultilayerPerceptron();
         ((MultilayerPerceptron)udal.classifier).setTrainingTime(100);
         udal.learnByClassifier();

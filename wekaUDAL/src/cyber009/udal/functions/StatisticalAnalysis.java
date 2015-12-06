@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
+import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -32,12 +33,29 @@ public class StatisticalAnalysis {
         }
     }
     
+    public double probabilityOfTargerClass(Instances dataSet, double classTarget) {
+        AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
+        double ptc = 0.0D;
+        if(classStats.nominalCounts != null ) {
+            for(int i=0; i<classStats.nominalCounts.length; i++) {
+                if(new Double(
+                        dataSet.attribute(
+                                dataSet.classIndex()).value(i)) == classTarget) {
+                     ptc = (double)classStats.nominalCounts[i]/(double)classStats.totalCount;
+                }
+            }
+        }
+        return ptc;
+    }
+    
     
     public double posteriorDistribution(Instance unLabelSet, double classTarget) {
         double prDistribution = 0.0D;
+        AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
         try {
             double classPradic = evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
-            prDistribution = Math.abs(classPradic-classTarget);
+            prDistribution = Math.abs(classPradic-classTarget)
+                    *probabilityOfTargerClass(trainingDataSet, classTarget);
             //System.out.println(trainingDataSet.classAttribute().);
         } catch (Exception ex) {
             Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
