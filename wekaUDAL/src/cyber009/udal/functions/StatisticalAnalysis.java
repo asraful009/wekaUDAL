@@ -54,7 +54,7 @@ public class StatisticalAnalysis {
         try {
             evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
             double classPradic = evaluation.pctCorrect(); // must be show for correctness  ----------------------
-            prDistribution = Math.abs(classPradic-classTarget)
+            prDistribution = classPradic
                     *probabilityOfTargerClass(trainingDataSet, classTarget);
             //System.out.println(evaluation.pctCorrect());
         } catch (Exception ex) {
