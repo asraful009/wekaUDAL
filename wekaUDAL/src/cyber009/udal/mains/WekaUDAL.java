@@ -95,8 +95,10 @@ public class WekaUDAL {
                 pp = 0.0D;
                 for (int i = 0; i < classStats.nominalCounts.length; i++) {
                     double classTarget = new Double(data.labelDataSets.attribute(data.labelDataSets.classIndex()).value(i));
+                    unLabelSet.setClassValue(classTarget);
                     pp += sa.posteriorDistribution(unLabelSet, classTarget);
                 }
+                unLabelSet.setClassMissing();
                 System.out.println("data:"+unLabelSet+" pp:"+ pp);
             }
         }
@@ -125,7 +127,7 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 1700);
+        udal.init(2, 170);
         udal.activeLearning(130);
         udal.classifier = new MultilayerPerceptron();
         ((MultilayerPerceptron)udal.classifier).setTrainingTime(100);

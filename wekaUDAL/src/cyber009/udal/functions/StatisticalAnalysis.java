@@ -48,18 +48,23 @@ public class StatisticalAnalysis {
         return ptc;
     }
     
-    
     public double posteriorDistribution(Instance unLabelSet, double classTarget) {
         double prDistribution = 0.0D;
         AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
         try {
-            double classPradic = evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
+            evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
+            double classPradic = evaluation.pctCorrect(); // must be show for correctness  ----------------------
             prDistribution = Math.abs(classPradic-classTarget)
                     *probabilityOfTargerClass(trainingDataSet, classTarget);
-            //System.out.println(trainingDataSet.classAttribute().);
+            //System.out.println(evaluation.pctCorrect());
         } catch (Exception ex) {
             Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
         }
         return prDistribution;
+    }
+    
+    public double conditionalEntropy() {
+        double cEnt = 0.0D;
+        return cEnt;
     }
 }
