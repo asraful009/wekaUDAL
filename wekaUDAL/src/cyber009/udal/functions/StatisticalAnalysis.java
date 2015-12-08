@@ -19,22 +19,14 @@ import weka.core.Instances;
  */
 public class StatisticalAnalysis {
     
-    Evaluation evaluation = null;
-    Classifier classifier = null;
-    Instances trainingDataSet;
+   
     
-    public StatisticalAnalysis(Classifier classifier, Instances trainingDataSet) {
-        try {
-            this.trainingDataSet = trainingDataSet;
-            this.classifier = classifier;
-            evaluation = new Evaluation(trainingDataSet);
-        } catch (Exception ex) {
-            Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public StatisticalAnalysis() {
+        
     }
     
     public double probabilityOfTargerClass(Instances dataSet, double classTarget) {
-        AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
+        AttributeStats classStats = dataSet.attributeStats(dataSet.classIndex());
         double ptc = 0.0D;
         if(classStats.nominalCounts != null ) {
             for(int i=0; i<classStats.nominalCounts.length; i++) {
@@ -48,10 +40,13 @@ public class StatisticalAnalysis {
         return ptc;
     }
     
-    public double posteriorDistribution(Instance unLabelSet, double classTarget) {
+    public double posteriorDistribution(Classifier classifier, Instances trainingDataSet,
+            Instance unLabelSet, double classTarget) {
         double prDistribution = 0.0D;
+        Evaluation evaluation = null;
         AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
         try {
+            evaluation = new Evaluation(trainingDataSet);
             evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
             double classPradic = evaluation.pctCorrect(); // must be show for correctness  ----------------------
             prDistribution = classPradic

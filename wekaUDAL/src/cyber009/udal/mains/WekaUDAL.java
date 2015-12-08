@@ -86,14 +86,15 @@ public class WekaUDAL {
     public void forwardInstanceSelection() {
         double pp = 0.0D;
         AttributeStats classStats = data.labelDataSets.attributeStats(data.labelDataSets.classIndex());
-        StatisticalAnalysis sa = new StatisticalAnalysis(classifier, data.labelDataSets);
+        StatisticalAnalysis sa = new StatisticalAnalysis();
         if(classStats.nominalCounts != null) {
             for(Instance unLabelSet: data.unLabelDataSets) {
                 pp = 0.0D;
                 for (int i = 0; i < classStats.nominalCounts.length; i++) {
                     double classTarget = new Double(data.labelDataSets.attribute(data.labelDataSets.classIndex()).value(i));
                     unLabelSet.setClassValue(classTarget);
-                    pp += sa.posteriorDistribution(unLabelSet, classTarget);
+                    pp += sa.posteriorDistribution(classifier, data.labelDataSets, 
+                            unLabelSet, classTarget);
                 }
                 unLabelSet.setClassMissing();
                 System.out.println("data:"+unLabelSet+" pp:"+ pp);
