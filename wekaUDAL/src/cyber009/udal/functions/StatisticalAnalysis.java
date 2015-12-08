@@ -7,6 +7,7 @@ package cyber009.udal.functions;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.text.normalizer.UBiDiProps;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.AttributeStats;
@@ -44,7 +45,6 @@ public class StatisticalAnalysis {
             Instance unLabelSet, double classTarget) {
         double prDistribution = 0.0D;
         Evaluation evaluation = null;
-        AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
         try {
             evaluation = new Evaluation(trainingDataSet);
             evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
@@ -58,8 +58,23 @@ public class StatisticalAnalysis {
         return prDistribution;
     }
     
-    public double conditionalEntropy() {
+    public double conditionalEntropy(Classifier classifier, Instances trainingDataSet,
+            Instances unLabelDataSets, Instance unLabelSet, double classTarget) {
         double cEnt = 0.0D;
+        double entropy = 0.0D;
+        unLabelSet.setClassValue(classTarget);
+        trainingDataSet.add(unLabelSet);
+        AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
+        for(Instance set: unLabelDataSets) {
+            // remove xu - u -x
+            for (int i = 0; i < classStats.nominalCounts.length; i++) {
+                    double target = new Double(
+                            trainingDataSet.attribute(trainingDataSet.classIndex()).value(i));
+                    set.setClassValue(target);
+                    entropy = posteriorDistribution(classifier,
+                    trainingDataSet, set, classTarget);
+                }
+        }
         return cEnt;
     }
 }
