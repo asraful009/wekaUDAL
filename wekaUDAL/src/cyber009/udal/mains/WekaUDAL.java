@@ -95,6 +95,8 @@ public class WekaUDAL {
                     unLabelSet.setClassValue(classTarget);
                     pp += sa.posteriorDistribution(classifier, data.labelDataSets, 
                             unLabelSet, classTarget);
+                    pp *= sa.conditionalEntropy(classifier, data.labelDataSets, 
+                            data.unLabelDataSets, unLabelSet, classTarget);
                 }
                 unLabelSet.setClassMissing();
                 System.out.println("data:"+unLabelSet+" pp:"+ pp);

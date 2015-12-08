@@ -7,7 +7,6 @@ package cyber009.udal.functions;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.text.normalizer.UBiDiProps;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.AttributeStats;
@@ -26,6 +25,12 @@ public class StatisticalAnalysis {
         
     }
     
+    /**
+     * 
+     * @param dataSet
+     * @param classTarget
+     * @return 
+     */
     public double probabilityOfTargerClass(Instances dataSet, double classTarget) {
         AttributeStats classStats = dataSet.attributeStats(dataSet.classIndex());
         double ptc = 0.0D;
@@ -41,6 +46,14 @@ public class StatisticalAnalysis {
         return ptc;
     }
     
+    /**
+     * 
+     * @param classifier
+     * @param trainingDataSet
+     * @param unLabelSet
+     * @param classTarget
+     * @return 
+     */
     public double posteriorDistribution(Classifier classifier, Instances trainingDataSet,
             Instance unLabelSet, double classTarget) {
         double prDistribution = 0.0D;
@@ -58,6 +71,15 @@ public class StatisticalAnalysis {
         return prDistribution;
     }
     
+    /**
+     * 
+     * @param classifier
+     * @param trainingDataSet
+     * @param unLabelDataSets
+     * @param unLabelSet
+     * @param classTarget
+     * @return 
+     */
     public double conditionalEntropy(Classifier classifier, Instances trainingDataSet,
             Instances unLabelDataSets, Instance unLabelSet, double classTarget) {
         double cEnt = 0.0D;
@@ -72,7 +94,8 @@ public class StatisticalAnalysis {
                             trainingDataSet.attribute(trainingDataSet.classIndex()).value(i));
                     set.setClassValue(target);
                     entropy = posteriorDistribution(classifier,
-                    trainingDataSet, set, classTarget);
+                                    trainingDataSet, set, classTarget);
+                    cEnt += -(entropy)*Math.log10(entropy);
                 }
         }
         return cEnt;
