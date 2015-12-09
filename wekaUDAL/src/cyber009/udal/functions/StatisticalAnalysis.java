@@ -70,14 +70,16 @@ public class StatisticalAnalysis {
     public double posteriorDistribution(Classifier classifier, Instances trainingDataSet,
             Instance unLabelSet, double classTarget) {
         double prDistribution = 0.0D;
+        double classPradic = 0.0D;
         Evaluation evaluation = null;
         try {
             evaluation = new Evaluation(trainingDataSet);
             evaluation.evaluateModelOnceAndRecordPrediction(classifier, unLabelSet);
-            double classPradic = evaluation.pctCorrect(); // must be show for correctness  ----------------------
+            //evaluation.pctCorrect(); // must be show for correctness  ----------------------
+            classPradic = evaluation.meanAbsoluteError();
             prDistribution = classPradic
                     *probabilityOfTargerClass(trainingDataSet, classTarget);
-            System.out.println(evaluation.pctCorrect());
+            System.out.println(classPradic);
         } catch (Exception ex) {
             Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
         }
