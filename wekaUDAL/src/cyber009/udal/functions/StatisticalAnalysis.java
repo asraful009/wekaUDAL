@@ -79,7 +79,7 @@ public class StatisticalAnalysis {
             classPradic = evaluation.meanAbsoluteError();
             prDistribution = classPradic
                     *probabilityOfTargerClass(trainingDataSet, classTarget);
-            System.out.println(classPradic);
+//            System.out.println(classPradic);
         } catch (Exception ex) {
             Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,14 +106,15 @@ public class StatisticalAnalysis {
             if(instanceCMPWithoutClass(set, unLabelSet) == true)
                 continue;
             for (int i = 0; i < classStats.nominalCounts.length; i++) {
-                    double target = new Double(
-                            trainingDataSet.attribute(trainingDataSet.classIndex()).value(i));
-                    set.setClassValue(target);
-                    entropy = posteriorDistribution(classifier,
-                                    trainingDataSet, set, classTarget);
-                    System.out.println("entropy:"+entropy);
-                    cEnt += -(entropy)*Math.log10(entropy);
-                }
+                double target = new Double(
+                        trainingDataSet.attribute(trainingDataSet.classIndex()).value(i));
+                set.setClassValue(target);
+                entropy = posteriorDistribution(classifier,
+                                trainingDataSet, set, classTarget);
+                //System.out.println("entropy:"+entropy);
+                cEnt += -(entropy)*Math.log10(entropy);
+                set.setClassMissing();
+            }
         }
         return cEnt;
     }

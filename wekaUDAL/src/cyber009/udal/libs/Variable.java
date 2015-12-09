@@ -1,6 +1,7 @@
 package cyber009.udal.libs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import weka.core.Instances;
 
@@ -20,7 +21,7 @@ public class Variable {
     public int numberOfDataset;
     public Instances unLabelDataSets = null;
     public Instances labelDataSets = null;
-    
+    public HashMap<Integer, Double> infoFWunLabel = null;
     public List<Double> listOfClasses;
 
     /**
@@ -32,5 +33,6 @@ public class Variable {
         this.numberOfFeature = numberOfFeature;
         this.numberOfDataset = numberOfDataset;
         this.listOfClasses = new ArrayList<>();
+        this.infoFWunLabel = new HashMap<>();
     }
 }

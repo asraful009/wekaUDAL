@@ -9,6 +9,8 @@ import cyber009.udal.functions.LinearFunction;
 import cyber009.udal.functions.StatisticalAnalysis;
 import cyber009.udal.libs.Variable;
 import java.awt.BorderLayout;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +32,7 @@ public class WekaUDAL {
     public Variable data = null;
     public LinearFunction func = null;
     public Classifier classifier = null;
+    
     
     public WekaUDAL() {
         
@@ -88,19 +91,22 @@ public class WekaUDAL {
         AttributeStats classStats = data.labelDataSets.attributeStats(data.labelDataSets.classIndex());
         StatisticalAnalysis sa = new StatisticalAnalysis();
         if(classStats.nominalCounts != null) {
-            for(Instance unLabelSet: data.unLabelDataSets) {
+            for(int n=0; n<data.unLabelDataSets.numInstances(); n++) {
+                Instance unLabelSet =  data.unLabelDataSets.get(n);
                 pp = 0.0D;
                 for (int i = 0; i < classStats.nominalCounts.length; i++) {
-                    double classTarget = new Double(data.labelDataSets.attribute(data.labelDataSets.classIndex()).value(i));
+                    double classTarget = new Double(
+                            data.labelDataSets.attribute(
+                                data.labelDataSets.classIndex()).value(i));
                     unLabelSet.setClassValue(classTarget);
                     pp += sa.posteriorDistribution(classifier, data.labelDataSets, 
                             unLabelSet, classTarget);
                     pp *= sa.conditionalEntropy(classifier, data.labelDataSets, 
                             data.unLabelDataSets, unLabelSet, classTarget);
+                    unLabelSet.setClassValue(Double.NaN);
                 }
-                unLabelSet.setClassMissing();
-                System.out.println("data:"+unLabelSet+" pp:"+ pp);
-            }
+                data.infoFWunLabel.put(n, pp);
+            }            
         }
     }
     
@@ -127,13 +133,19 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 17);
-        udal.activeLearning(13);
+        udal.init(2, 170);
+        udal.activeLearning(130);
         udal.classifier = new MultilayerPerceptron();
         ((MultilayerPerceptron)udal.classifier).setTrainingTime(10000);
         udal.learnByClassifier();
-        
+        // forward Instance Selection
         udal.forwardInstanceSelection();
+        for (Map.Entry<Integer, Double> entrySet : udal.data.infoFWunLabel.entrySet()) {
+            int index = entrySet.getKey();
+            System.out.println(index + " : "
+                    +entrySet.getValue() + " : "
+                    + udal.data.unLabelDataSets.instance(index).toString() );            
+        }
         //System.out.println(udal.classifier.toString());
         //udal.showPlot(udal.data.labelDataSets);
         
