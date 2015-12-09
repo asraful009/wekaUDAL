@@ -7,6 +7,7 @@ package cyber009.udal.mains;
 
 import cyber009.udal.functions.LinearFunction;
 import cyber009.udal.functions.StatisticalAnalysis;
+import cyber009.udal.libs.Utilitys;
 import cyber009.udal.libs.Variable;
 import java.awt.BorderLayout;
 import java.util.HashMap;
@@ -140,6 +141,8 @@ public class WekaUDAL {
         udal.learnByClassifier();
         // forward Instance Selection
         udal.forwardInstanceSelection();
+        udal.data.infoFWunLabel = 
+                Utilitys.sortByValue(udal.data.infoFWunLabel);
         for (Map.Entry<Integer, Double> entrySet : udal.data.infoFWunLabel.entrySet()) {
             int index = entrySet.getKey();
             System.out.println(index + " : "
