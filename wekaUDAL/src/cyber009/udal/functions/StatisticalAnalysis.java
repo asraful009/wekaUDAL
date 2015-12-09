@@ -25,6 +25,19 @@ public class StatisticalAnalysis {
         
     }
     
+    public static boolean instanceCMPWithoutClass(Instance a, Instance b) {
+        if(a.numAttributes() == b.numAttributes()) {
+            for(int i = 0; i<a.numAttributes(); i++) {
+                if(a.value(i) != b.value(i)) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * 
      * @param dataSet
@@ -64,7 +77,7 @@ public class StatisticalAnalysis {
             double classPradic = evaluation.pctCorrect(); // must be show for correctness  ----------------------
             prDistribution = classPradic
                     *probabilityOfTargerClass(trainingDataSet, classTarget);
-            //System.out.println(evaluation.pctCorrect());
+            System.out.println(evaluation.pctCorrect());
         } catch (Exception ex) {
             Logger.getLogger(StatisticalAnalysis.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -88,13 +101,15 @@ public class StatisticalAnalysis {
         trainingDataSet.add(unLabelSet);
         AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
         for(Instance set: unLabelDataSets) {
-            // remove xu - u -x
+            if(instanceCMPWithoutClass(set, unLabelSet) == true)
+                continue;
             for (int i = 0; i < classStats.nominalCounts.length; i++) {
                     double target = new Double(
                             trainingDataSet.attribute(trainingDataSet.classIndex()).value(i));
                     set.setClassValue(target);
                     entropy = posteriorDistribution(classifier,
                                     trainingDataSet, set, classTarget);
+                    System.out.println("entropy:"+entropy);
                     cEnt += -(entropy)*Math.log10(entropy);
                 }
         }

@@ -58,7 +58,7 @@ public class LinearFunction {
             coefficients[n] = rand.nextGaussian();
         }
     }
-    
+           
     public void syntacticLabelFunction(Instance set) {
         double sum = 0.0D;
         for(int n=0; n<set.numAttributes()-1; n++) {

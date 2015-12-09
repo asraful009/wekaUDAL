@@ -127,10 +127,10 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 170);
-        udal.activeLearning(130);
+        udal.init(2, 17);
+        udal.activeLearning(13);
         udal.classifier = new MultilayerPerceptron();
-        ((MultilayerPerceptron)udal.classifier).setTrainingTime(100);
+        ((MultilayerPerceptron)udal.classifier).setTrainingTime(10000);
         udal.learnByClassifier();
         
         udal.forwardInstanceSelection();
