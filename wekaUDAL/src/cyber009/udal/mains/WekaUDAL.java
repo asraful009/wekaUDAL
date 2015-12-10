@@ -134,7 +134,7 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 170);
+        udal.init(2, 1700);
         udal.activeLearning(130);
         udal.classifier = new MultilayerPerceptron();
         ((MultilayerPerceptron)udal.classifier).setTrainingTime(10000);
@@ -142,7 +142,7 @@ public class WekaUDAL {
         // forward Instance Selection
         udal.forwardInstanceSelection();
         udal.data.infoFWunLabel = 
-                Utilitys.sortByValue(udal.data.infoFWunLabel);
+                (HashMap<Integer, Double>) Utilitys.sortByValue((Map)udal.data.infoFWunLabel);
         for (Map.Entry<Integer, Double> entrySet : udal.data.infoFWunLabel.entrySet()) {
             int index = entrySet.getKey();
             System.out.println(index + " : "
