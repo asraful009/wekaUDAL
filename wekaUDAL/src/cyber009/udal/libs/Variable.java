@@ -19,10 +19,12 @@ public class Variable {
     
     public int numberOfFeature;
     public int numberOfDataset;
+    public int N_FL;
     public Instances unLabelDataSets = null;
     public Instances labelDataSets = null;
     public HashMap<Integer, Double> infoFWunLabel = null;
     public List<Double> listOfClasses;
+    
 
     /**
      *  <p>All variable's</p>

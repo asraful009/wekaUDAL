@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -111,6 +112,29 @@ public class WekaUDAL {
         }
     }
     
+    @SuppressWarnings("unchecked")
+    public void updateLabelDataSet() {
+        int count = 0;
+        Instances temp = new Instances(data.unLabelDataSets, 0, 0);
+        data.infoFWunLabel = 
+                (HashMap<Integer, Double>) Utilitys.sortByValue((Map)data.infoFWunLabel);
+        for (Map.Entry<Integer, Double> entrySet : data.infoFWunLabel.entrySet()) {
+            int index = entrySet.getKey();
+            if(count < data.N_FL) {
+//                System.out.println(index + " : "
+//                        +entrySet.getValue() + " : "
+//                        + data.unLabelDataSets.instance(index).toString());
+                data.labelDataSets.add(data.unLabelDataSets.get(index));
+            } else {
+                temp.add(data.unLabelDataSets.get(index));
+            }
+            count++;
+        }
+        data.infoFWunLabel.clear();
+        data.unLabelDataSets.clear();
+        data.unLabelDataSets.addAll(temp);
+        System.out.println("------------------------------------------");
+    }
     
     public void showPlot(Instances dataSet) {
         PlotData2D p2D = new PlotData2D(dataSet);
@@ -134,21 +158,19 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 1700);
-        udal.activeLearning(130);
+        udal.init(2, 13);
+        udal.data.N_FL = 3;
+        udal.activeLearning(7);
         udal.classifier = new MultilayerPerceptron();
         ((MultilayerPerceptron)udal.classifier).setTrainingTime(10000);
         udal.learnByClassifier();
         // forward Instance Selection
+        System.out.println(udal.data.labelDataSets);
+        System.out.println(udal.data.unLabelDataSets);
         udal.forwardInstanceSelection();
-        udal.data.infoFWunLabel = 
-                (HashMap<Integer, Double>) Utilitys.sortByValue((Map)udal.data.infoFWunLabel);
-        for (Map.Entry<Integer, Double> entrySet : udal.data.infoFWunLabel.entrySet()) {
-            int index = entrySet.getKey();
-            System.out.println(index + " : "
-                    +entrySet.getValue() + " : "
-                    + udal.data.unLabelDataSets.instance(index).toString() );            
-        }
+        udal.updateLabelDataSet();
+        System.out.println(udal.data.labelDataSets);
+        System.out.println(udal.data.unLabelDataSets);
         //System.out.println(udal.classifier.toString());
         //udal.showPlot(udal.data.labelDataSets);
         

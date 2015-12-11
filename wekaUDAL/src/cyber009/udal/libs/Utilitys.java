@@ -7,15 +7,11 @@ package cyber009.udal.libs;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  *
@@ -23,6 +19,7 @@ import java.util.stream.Stream;
  */
 public class Utilitys {
 
+    @SuppressWarnings("unchecked")
     public static Map sortByValue(Map unsortMap) {	 
 	List list = new LinkedList(unsortMap.entrySet());
  
