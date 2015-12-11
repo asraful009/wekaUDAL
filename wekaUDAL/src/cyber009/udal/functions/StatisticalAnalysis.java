@@ -100,7 +100,7 @@ public class StatisticalAnalysis {
         double cEnt = 0.0D;
         double entropy = 0.0D;
         unLabelSet.setClassValue(classTarget);
-        trainingDataSet.add(unLabelSet);
+        trainingDataSet.add(trainingDataSet.numInstances(),unLabelSet);
         AttributeStats classStats = trainingDataSet.attributeStats(trainingDataSet.classIndex());
         for(Instance set: unLabelDataSets) {
             if(instanceCMPWithoutClass(set, unLabelSet) == true)
@@ -116,6 +116,7 @@ public class StatisticalAnalysis {
                 set.setClassMissing();
             }
         }
+        trainingDataSet.remove(trainingDataSet.numInstances()-1);
         return cEnt;
     }
 }
