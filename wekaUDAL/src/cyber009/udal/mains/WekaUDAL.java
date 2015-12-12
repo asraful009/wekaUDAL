@@ -51,7 +51,12 @@ public class WekaUDAL {
         Random r = new Random(System.currentTimeMillis());
         int index = 0;
         for(int d=0; d<D; d++) {
-            index = r.nextInt(data.unLabelDataSets.numInstances());
+            try {
+                index = r.nextInt(data.unLabelDataSets.numInstances());
+            } catch(Exception e) {
+                //System.out.println("#"+data.unLabelDataSets.numInstances());
+                break;
+            }
             Instance set = data.unLabelDataSets.get(index);
             func.syntacticLabelFunction(set);
             data.labelDataSets.add(set);
@@ -124,6 +129,7 @@ public class WekaUDAL {
 //                System.out.println(index + " : "
 //                        +entrySet.getValue() + " : "
 //                        + data.unLabelDataSets.instance(index).toString());
+                func.syntacticLabelFunction(data.unLabelDataSets.get(index));
                 data.labelDataSets.add(data.unLabelDataSets.get(index));
             } else {
                 temp.add(data.unLabelDataSets.get(index));
@@ -133,7 +139,7 @@ public class WekaUDAL {
         data.infoFWunLabel.clear();
         data.unLabelDataSets.clear();
         data.unLabelDataSets.addAll(temp);
-        System.out.println("------------------------------------------");
+        //System.out.println("------------------------------------------");
     }
     
     public void showPlot(Instances dataSet) {
@@ -158,21 +164,28 @@ public class WekaUDAL {
     public static void main(String[] args) {
         WekaUDAL udal = new WekaUDAL();
         // initial data
-        udal.init(2, 13);
-        udal.data.N_FL = 3;
-        udal.activeLearning(7);
-        udal.classifier = new MultilayerPerceptron();
-        ((MultilayerPerceptron)udal.classifier).setTrainingTime(10000);
-        udal.learnByClassifier();
+        udal.init(2, 3000);
+        udal.data.N_FL = 30;
+        udal.activeLearning(70);
+        udal.showPlot(udal.data.labelDataSets);
         // forward Instance Selection
-        System.out.println(udal.data.labelDataSets);
-        System.out.println(udal.data.unLabelDataSets);
-        udal.forwardInstanceSelection();
-        udal.updateLabelDataSet();
-        System.out.println(udal.data.labelDataSets);
-        System.out.println(udal.data.unLabelDataSets);
+        for(int i=0; i<20; i++) {
+            System.out.println("---------itaration :"+i+" -------------");
+            udal.classifier = new MultilayerPerceptron();
+            ((MultilayerPerceptron)udal.classifier).setTrainingTime(10000);
+            System.out.println(udal.data.labelDataSets.numInstances()
+            //        +"\n"+udal.data.labelDataSets
+            );
+            System.out.println(udal.data.unLabelDataSets.numInstances()
+            //        +"\n"+udal.data.unLabelDataSets
+            );
+            udal.learnByClassifier();
+            udal.forwardInstanceSelection();
+            udal.updateLabelDataSet();
+            
+        }        
         //System.out.println(udal.classifier.toString());
-        //udal.showPlot(udal.data.labelDataSets);
+        udal.showPlot(udal.data.labelDataSets);
         
         
     }
